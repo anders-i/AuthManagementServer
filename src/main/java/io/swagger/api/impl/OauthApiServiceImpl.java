@@ -22,11 +22,13 @@ public class OauthApiServiceImpl extends OauthApiService {
     @Override
     public Response checkAccessToken(Token body, SecurityContext securityContext) throws NotFoundException {
         // do some magic!
+        System.out.println("heeeeey");
         return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK, "magic!")).build();
     }
     @Override
     public Response requestAccessToken(LoginRequest body, SecurityContext securityContext) throws NotFoundException {
         // do some magic!
+        System.out.println("heeeeeey igen");
         return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK, "magic!")).build();
     }
 }

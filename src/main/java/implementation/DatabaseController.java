@@ -47,89 +47,89 @@ public class DatabaseController {
         return instance;
     }
     
-//    private Token getAccessTokenSync(Connection con, int userid) throws SQLException, LoginException {
-//        //Check if we already have an access token
-//        String checkAlreadyExistingToken = "SELECT * FROM public.ams_tokens WHERE amsuser_id = ?;";
-//        Token token;
-//        try (PreparedStatement existingToken = con.prepareStatement(checkAlreadyExistingToken)) {
-//            existingToken.setInt(1, userid);
-//            ResultSet existingRS = existingToken.executeQuery();
-//            token = new Token();
-//            if (existingRS.next()) {
-//                ZonedDateTime times = ZonedDateTime.parse(existingRS.getString("expires"));
-//                if (times.isBefore(ZonedDateTime.now())) {
-//                    String testInsert = "DELETE FROM public.ams_tokens WHERE token = ?;";
-//                    try (PreparedStatement deleteStatement = con.prepareStatement(testInsert)) {
-//                        deleteStatement.setString(1, existingRS.getString("token"));
-//                        deleteStatement.executeUpdate();
-//                    }
-//                } else {
-//                    token.setAccessToken(existingRS.getString("token"));
-//                    token.setExpires(existingRS.getString("expires"));
-//                    existingToken.close();
-//                    return token;
-//                }
-//            }
-//            RandomString session = new RandomString(200);
-//            token.setAccessToken(session.nextString());
-//            LocalDate localDate = LocalDate.now().plusDays(1);
-//            LocalTime localTime = LocalTime.now();
-//            OffsetDateTime datetime = OffsetDateTime.of(LocalDateTime.of(localDate, localTime), ZoneOffset.UTC);
-//            token.setExpires(datetime.toString());
-//            String insertTokenSQL = "INSERT INTO public.ams_tokens (token, amsuser_id, expires) VALUES (?, ?, ?);";
-//            try (PreparedStatement tokenStatement = con.prepareStatement(insertTokenSQL)) {
-//                tokenStatement.setString(1, token.getAccessToken());
-//                tokenStatement.setInt(2, userid);
-//                tokenStatement.setString(3, datetime.toString());
-//                tokenStatement.executeUpdate();
-//            }
-//        }
-//        return token;
-//    }
-//
-//    /**
-//     *
-//     * @param request LoginRequest
-//     * @param con Connection
-//     * @return Token
-//     * @throws SQLException
-//     * @throws LoginException
-//     */
-//    public Token getAccessToken(LoginRequest request, Connection con) throws SQLException, LoginException {
-//        String sql = "SELECT * FROM public.ams_users WHERE username = ?;";
-//        try (PreparedStatement statement = con.prepareStatement(sql)) {
-//            statement.setString(1, request.getUsername());
-//            ResultSet rs = statement.executeQuery();
-//            while (rs.next()) {
-//                if (checkPassword(request.getPassword(), rs.getString("password_hash"))) {
-//                    Token token;
-//                    int userid = rs.getInt("id");
-//                    String username = request.getUsername();
-//                    Object lock = objectLock.get(username);
-//                    //no need to sync objectlock if object already exists. But double check needed
-//                    if(lock == null){
-//                        synchronized(objectLock){
-//                            //check again if it exists now that we are in sync
-//                            Object checkLock = objectLock.get(username);
-//                            if (checkLock == null) {
-//                                Object newLock = new Object();
-//                                objectLock.put(username, newLock);
-//                                lock = newLock;
-//                            }else{
-//                                lock = checkLock;
-//                            }
-//                        }
-//                    }
-//                    synchronized (lock) {
-//                        token = getAccessTokenSync(con, userid);
-//                    }
-//                    return token;
-//                }
-//            }
-//        }
-//        throw new LoginException("Wrong username or password provided");
-//
-//    }
+    private Token getAccessTokenSync(Connection con, int userid) throws SQLException, LoginException {
+        //Check if we already have an access token
+        String checkAlreadyExistingToken = "SELECT * FROM public.tokens WHERE user_id = ?;";
+        Token token;
+        try (PreparedStatement existingToken = con.prepareStatement(checkAlreadyExistingToken)) {
+            existingToken.setInt(1, userid);
+            ResultSet existingRS = existingToken.executeQuery();
+            token = new Token();
+            if (existingRS.next()) {
+                ZonedDateTime times = ZonedDateTime.parse(existingRS.getString("expires"));
+                if (times.isBefore(ZonedDateTime.now())) {
+                    String testInsert = "DELETE FROM public.tokens WHERE token = ?;";
+                    try (PreparedStatement deleteStatement = con.prepareStatement(testInsert)) {
+                        deleteStatement.setString(1, existingRS.getString("token"));
+                        deleteStatement.executeUpdate();
+                    }
+                } else {
+                    token.setAccessToken(existingRS.getString("token"));
+                    token.setExpires(existingRS.getString("expires"));
+                    existingToken.close();
+                    return token;
+                }
+            }
+            RandomString session = new RandomString(200);
+            token.setAccessToken(session.nextString());
+            LocalDate localDate = LocalDate.now().plusDays(1);
+            LocalTime localTime = LocalTime.now();
+            OffsetDateTime datetime = OffsetDateTime.of(LocalDateTime.of(localDate, localTime), ZoneOffset.UTC);
+            token.setExpires(datetime.toString());
+            String insertTokenSQL = "INSERT INTO public.tokens (token, user_id, expires) VALUES (?, ?, ?);";
+            try (PreparedStatement tokenStatement = con.prepareStatement(insertTokenSQL)) {
+                tokenStatement.setString(1, token.getAccessToken());
+                tokenStatement.setInt(2, userid);
+                tokenStatement.setString(3, datetime.toString());
+                tokenStatement.executeUpdate();
+            }
+        }
+        return token;
+    }
+
+    /**
+     *
+     * @param request LoginRequest
+     * @param con Connection
+     * @return Token
+     * @throws SQLException
+     * @throws LoginException
+     */
+    public Token getAccessToken(LoginRequest request, Connection con) throws SQLException, LoginException {
+        String sql = "SELECT * FROM public.users WHERE username = ?;";
+        try (PreparedStatement statement = con.prepareStatement(sql)) {
+            statement.setString(1, request.getUsername());
+            ResultSet rs = statement.executeQuery();
+            while (rs.next()) {
+                if (checkPassword(request.getPassword(), rs.getString("password"))) {
+                    Token token;
+                    int userid = rs.getInt("id");
+                    String username = request.getUsername();
+                    Object lock = objectLock.get(username);
+                    //no need to sync objectlock if object already exists. But double check needed
+                    if(lock == null){
+                        synchronized(objectLock){
+                            //check again if it exists now that we are in sync
+                            Object checkLock = objectLock.get(username);
+                            if (checkLock == null) {
+                                Object newLock = new Object();
+                                objectLock.put(username, newLock);
+                                lock = newLock;
+                            }else{
+                                lock = checkLock;
+                            }
+                        }
+                    }
+                    synchronized (lock) {
+                        token = getAccessTokenSync(con, userid);
+                    }
+                    return token;
+                }
+            }
+        }
+        throw new LoginException("Wrong username or password provided");
+
+    }
 
     /**
      * Method checks if token is correct and is still valid, if not, 
@@ -142,14 +142,14 @@ public class DatabaseController {
     public AccessTokenCheckResponse checkAccessToken(Token token, Connection con) throws SQLException {
         AccessTokenCheckResponse response = new AccessTokenCheckResponse();
         response.setCanAccess(false);
-        String sql = "SELECT * FROM public.ams_tokens WHERE token = ?";
+        String sql = "SELECT * FROM public.tokens WHERE token = ?";
         PreparedStatement statement = con.prepareStatement(sql);
         statement.setString(1, token.getAccessToken());
         ResultSet result = statement.executeQuery();
         while (result.next()) {
             ZonedDateTime times = ZonedDateTime.parse(result.getString("expires"));
             if (times.isBefore(ZonedDateTime.now())) {
-                String testInsert = "DELETE FROM public.ams_tokens WHERE token = ?;";
+                String testInsert = "DELETE FROM public.tokens WHERE token = ?;";
                 PreparedStatement deleteStatement = con.prepareStatement(testInsert);
                 deleteStatement.setString(1, result.getString("token"));
                 deleteStatement.executeUpdate();
@@ -169,7 +169,7 @@ public class DatabaseController {
      * @throws SQLException 
      */
     public void createUser(User user, Connection con) throws SQLException {
-        String testInsert = "INSERT INTO ams_users (username, password_hash) VALUES (?, ?);";
+        String testInsert = "INSERT INTO users (username, password) VALUES (?, ?);";
         PreparedStatement statement = con.prepareStatement(testInsert);
         statement.setString(1, user.getUsername());
         statement.setString(2, hashPassword(user.getPassword()));

@@ -18,18 +18,18 @@ import org.apache.commons.dbcp2.BasicDataSource;
  * @author herin
  */
 public class DataSource {
+
     private final static Object threadLock = new Object();
     private static DataSource dataSource;
     private BasicDataSource ds;
-    
-    
-    public DataSource() throws IOException, SQLException, PropertyVetoException{
+
+    public DataSource() throws IOException, SQLException, PropertyVetoException {
         ds = new BasicDataSource();
         ds.setDriverClassName("org.postgresql.Driver");
         ds.setUsername("admin");
         ds.setPassword("1234");
-        ds.setUrl("jdbc:postgresql://localhost:" + 25000 + "/project_DB");
-        
+        ds.setUrl("jdbc:postgresql://localhost:" + 25000 + "/postgres");
+
         ds.setMaxWaitMillis(1000 * 60 * 10); //wait 60 seconds to get new connection
         ds.setMaxTotal(45);
         ds.setMaxIdle(45);
@@ -41,11 +41,11 @@ public class DataSource {
         ds.setMinEvictableIdleTimeMillis(60000); // 60 seconds to wait before idle connection is evicted
         ds.setMaxConnLifetimeMillis(1000 * 60 * 10); // 10 minutes is max life time
     }
-    
+
     public static DataSource getInstance() {
-        if(dataSource == null){
-            synchronized(threadLock){
-                if(dataSource == null){
+        if (dataSource == null) {
+            synchronized (threadLock) {
+                if (dataSource == null) {
                     try {
                         dataSource = new DataSource();
                     } catch (IOException ex) {
@@ -59,7 +59,8 @@ public class DataSource {
             }
         }
         return dataSource;
-    } 
+    }
+
     public Connection getConnection() throws SQLException {
         return ds.getConnection();
     }

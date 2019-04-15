@@ -23,7 +23,7 @@ import javax.validation.constraints.*;
 /**
  * Token
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2019-03-19T08:38:28.039Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2019-04-15T09:56:43.257Z")
 public class Token   {
   @JsonProperty("accessToken")
   private String accessToken = null;

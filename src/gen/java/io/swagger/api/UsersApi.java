@@ -29,7 +29,7 @@ import javax.validation.constraints.*;
 
 
 @io.swagger.annotations.Api(description = "the users API")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2019-03-19T08:38:28.039Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2019-04-15T09:56:43.257Z")
 public class UsersApi  {
    private final UsersApiService delegate;
 
@@ -69,5 +69,21 @@ public class UsersApi  {
 ,@Context SecurityContext securityContext)
     throws NotFoundException {
         return delegate.createUser(body,securityContext);
+    }
+    @DELETE
+    @Path("/deleteUser")
+    @Consumes({ "application/json" })
+    @Produces({ "application/json" })
+    @io.swagger.annotations.ApiOperation(value = "", notes = "Delete a desired user in the system ", response = Void.class, tags={ "User management", })
+    @io.swagger.annotations.ApiResponses(value = { 
+        @io.swagger.annotations.ApiResponse(code = 200, message = "OK", response = Void.class),
+        
+        @io.swagger.annotations.ApiResponse(code = 400, message = "Bad Request", response = Void.class),
+        
+        @io.swagger.annotations.ApiResponse(code = 500, message = "Internal Server Error", response = Void.class) })
+    public Response deleteUser(@ApiParam(value = "Delete user" ,required=true) User body
+,@Context SecurityContext securityContext)
+    throws NotFoundException {
+        return delegate.deleteUser(body,securityContext);
     }
 }

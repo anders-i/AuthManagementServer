@@ -171,8 +171,8 @@
     </dependency>
     <dependency>
       <groupId>org.postgresql</groupId>
-      <artifactId>jdbc</artifactId>
-      <version>9.3.jdbc4-SNAPSHOT</version>
+      <artifactId>postgresql</artifactId>
+      <version>42.2.5</version>
     </dependency>
   </dependencies>
   <repositories>

@@ -24,17 +24,27 @@ import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.validation.constraints.*;
+import org.joda.time.DateTime;
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2019-04-15T09:56:43.257Z")
 public class OauthApiServiceImpl extends OauthApiService {
     @Override
     public Response checkAccessToken(Token body, SecurityContext securityContext) throws NotFoundException {
-        // do some magic!
-        return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK, "magic!")).build();
+        try(Connection con = DataSource.getInstance().getConnection()){
+            AccessTokenCheckResponse atcr = new OAuthServerImplementation().checkAccessToken(body, con);
+            if(atcr.isCanAccess()){
+                return Response.ok().entity(atcr).build();
+            }else{
+                return Response.status(401).build();
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(OauthApiServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return Response.serverError().build();
     }
     @Override
     public Response requestAccessToken(LoginRequest body, SecurityContext securityContext) throws NotFoundException {
-        try (Connection dbCon = DataSource.getInstance().getConnection()) {
-            return Response.ok().entity(new OAuthServerImplementation().requestAccessToken(body, dbCon)).build();
+        try (Connection con = DataSource.getInstance().getConnection()) {
+            return Response.ok().entity(new OAuthServerImplementation().requestAccessToken(body, con)).build();
         } catch (SQLException ex) {
             Logger.getLogger(OauthApiServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
         } catch (LoginException ex) {

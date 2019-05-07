@@ -142,22 +142,22 @@ public class DatabaseController {
     public AccessTokenCheckResponse checkAccessToken(Token token, Connection con) throws SQLException {
         AccessTokenCheckResponse response = new AccessTokenCheckResponse();
         response.setCanAccess(false);
-        String sql = "SELECT * FROM public.tokens WHERE token = ?";
+        String sql = "SELECT * FROM tokens WHERE token = ?";
         PreparedStatement statement = con.prepareStatement(sql);
         statement.setString(1, token.getAccessToken());
-        ResultSet result = statement.executeQuery();
-        while (result.next()) {
-            ZonedDateTime times = ZonedDateTime.parse(result.getString("expires"));
+        ResultSet rs = statement.executeQuery();
+        while (rs.next()) {
+            ZonedDateTime times = ZonedDateTime.parse(rs.getString("expires"));
             if (times.isBefore(ZonedDateTime.now())) {
-                String testInsert = "DELETE FROM public.tokens WHERE token = ?;";
+                String testInsert = "DELETE FROM tokens WHERE token = ?;";
                 PreparedStatement deleteStatement = con.prepareStatement(testInsert);
-                deleteStatement.setString(1, result.getString("token"));
+                deleteStatement.setString(1, rs.getString("token"));
                 deleteStatement.executeUpdate();
             } else {
                 response.setCanAccess(true);
             }
         }
-        result.close();
+        rs.close();
         statement.close();
         return response;
     }

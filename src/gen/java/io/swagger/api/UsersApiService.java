@@ -5,7 +5,9 @@ import io.swagger.model.*;
 
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 
-import io.swagger.model.User;
+import io.swagger.model.Token;
+import io.swagger.model.UserArray;
+import io.swagger.model.UserRequest;
 
 import java.util.List;
 import io.swagger.api.NotFoundException;
@@ -15,8 +17,10 @@ import java.io.InputStream;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.validation.constraints.*;
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2019-04-15T09:56:43.257Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2019-05-10T17:25:08.962Z")
 public abstract class UsersApiService {
-    public abstract Response createUser(User body,SecurityContext securityContext) throws NotFoundException;
-    public abstract Response deleteUser(User body,SecurityContext securityContext) throws NotFoundException;
+    public abstract Response createUser(UserRequest body,SecurityContext securityContext) throws NotFoundException;
+    public abstract Response deleteUser(UserRequest body,SecurityContext securityContext) throws NotFoundException;
+    public abstract Response editUser(UserRequest body,SecurityContext securityContext) throws NotFoundException;
+    public abstract Response getAllUsers(Token body,SecurityContext securityContext) throws NotFoundException;
 }

@@ -9,6 +9,7 @@ import io.swagger.model.*;
 import io.swagger.model.AccessTokenCheckResponse;
 import io.swagger.model.LoginRequest;
 import io.swagger.model.Token;
+import io.swagger.model.UserRequest;
 
 import java.util.List;
 import io.swagger.api.NotFoundException;
@@ -24,8 +25,7 @@ import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import javax.validation.constraints.*;
-import org.joda.time.DateTime;
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2019-04-15T09:56:43.257Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2019-05-10T17:25:08.962Z")
 public class OauthApiServiceImpl extends OauthApiService {
     @Override
     public Response checkAccessToken(Token body, SecurityContext securityContext) throws NotFoundException {

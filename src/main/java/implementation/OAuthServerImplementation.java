@@ -8,6 +8,7 @@ package implementation;
 import io.swagger.model.AccessTokenCheckResponse;
 import io.swagger.model.LoginRequest;
 import io.swagger.model.Token;
+import io.swagger.model.UserRequest;
 import java.sql.Connection;
 import java.sql.SQLException;
 
@@ -21,7 +22,7 @@ public class OAuthServerImplementation {
         return DatabaseController.getInstance().checkAccessToken(token, con);
     }
     
-    public Token requestAccessToken(LoginRequest request, Connection con) throws SQLException, LoginException{
+    public UserRequest requestAccessToken(LoginRequest request, Connection con) throws SQLException, LoginException{
         return DatabaseController.getInstance().getAccessToken(request, con);
     }
     

@@ -1,6 +1,9 @@
+io\swagger\model\UserArray.class
+implementation\UsersServerImplementation.class
 io\swagger\model\AccessTokenCheckResponse.class
 implementation\DataSource.class
 io\swagger\api\factories\OauthApiServiceFactory.class
+io\swagger\model\UserRequest.class
 io\swagger\api\ApiResponseMessage.class
 io\swagger\model\Token.class
 implementation\OAuthServerImplementation.class
@@ -23,3 +26,4 @@ io\swagger\api\RFC3339DateFormat.class
 io\swagger\api\ApiException.class
 implementation\RandomString.class
 io\swagger\api\OauthApiService.class
+implementation\TokenConverter.class

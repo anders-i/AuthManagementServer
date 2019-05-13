@@ -9,6 +9,8 @@ import io.swagger.model.AccessTokenCheckResponse;
 import io.swagger.model.LoginRequest;
 import io.swagger.model.Token;
 import io.swagger.model.User;
+import io.swagger.model.UserArray;
+import io.swagger.model.UserRequest;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -95,7 +97,7 @@ public class DatabaseController {
      * @throws SQLException
      * @throws LoginException
      */
-    public Token getAccessToken(LoginRequest request, Connection con) throws SQLException, LoginException {
+    public UserRequest getAccessToken(LoginRequest request, Connection con) throws SQLException, LoginException {
         String sql = "SELECT * FROM public.users WHERE username = ?;";
         try (PreparedStatement statement = con.prepareStatement(sql)) {
             statement.setString(1, request.getUsername());
@@ -123,7 +125,10 @@ public class DatabaseController {
                     synchronized (lock) {
                         token = getAccessTokenSync(con, userid);
                     }
-                    return token;
+                    UserRequest userRequest = new UserRequest();
+                    userRequest.setToken(token);
+                    userRequest.setUser(getUser(username, con));
+                    return userRequest;
                 }
             }
         }
@@ -161,22 +166,75 @@ public class DatabaseController {
         statement.close();
         return response;
     }
-
+    
     /**
      * Creates a user 
      * @param user to create
      * @param con connection to use
      * @throws SQLException 
      */
+    
     public void createUser(User user, Connection con) throws SQLException {
-        String testInsert = "INSERT INTO users (username, password) VALUES (?, ?);";
+        String testInsert = "INSERT INTO users VALUES (?, ?, ?, ?);";
         PreparedStatement statement = con.prepareStatement(testInsert);
-        statement.setString(1, user.getUsername());
-        statement.setString(2, hashPassword(user.getPassword()));
+        statement.setString(1, user.getUsername().trim());
+        statement.setString(2, hashPassword(user.getPassword().trim()));
+        statement.setInt(3, maxUserId(con) + 1);
+        statement.setInt(4, user.getRights().intValue());
         statement.executeUpdate();
         statement.close();
     }
 
+    void editUser(User user, Connection con) throws SQLException {
+        String query = "UPDATE users SET username = ?, password = ?, rights = ? WHERE id = ?;";
+        PreparedStatement statement = con.prepareStatement(query);
+        statement.setString(1, user.getUsername());
+        statement.setString(2, hashPassword(user.getPassword()));
+        statement.setInt(3, user.getRights().intValue());
+        statement.setInt(4, user.getId().intValue());
+        statement.executeUpdate();
+        statement.close();
+    }
+    
+    public UserArray getAllUsers(Connection con) throws SQLException {
+        UserArray userArray = new UserArray();
+        String query = "SELECT * FROM users;";
+        PreparedStatement statement = con.prepareStatement(query);
+        ResultSet rs = statement.executeQuery();
+        while(rs.next()) {
+            User user = new User();
+            user.setId(rs.getLong("id"));
+            user.setUsername(rs.getString("username"));
+            user.setPassword(rs.getString("password"));
+            user.setRights(rs.getLong("rights"));
+            userArray.add(user);
+        }
+        rs.close();
+        statement.close();
+        return userArray;
+    }
+    
+    public void deleteUser(User user, Connection con) throws SQLException {
+        String query = "DELETE FROM users WHERE id=(?);";
+        PreparedStatement statement = con.prepareStatement(query);
+        statement.setInt(1, user.getId().intValue());
+        statement.executeUpdate();
+        statement.close();
+    }
+    
+    private int maxUserId(Connection con) throws SQLException{
+        int max = 0;
+        String query = "SELECT MAX(id) FROM users;";
+        PreparedStatement statement = con.prepareStatement(query);
+        ResultSet rs = statement.executeQuery();
+        while(rs.next()) {
+            max = rs.getInt(1);
+        }
+        rs.close();
+        statement.close();
+        return max;
+    }
+    
     /**
      * Hash a given plaintext password
      * @param password_plaintext to hash
@@ -212,5 +270,21 @@ public class DatabaseController {
 
         return (password_verified);
     }
-    
+
+    private User getUser(String username, Connection con) throws SQLException{
+        User user = new User();
+        String query = "SELECT * FROM users WHERE username=?;";
+        PreparedStatement statement = con.prepareStatement(query);
+        statement.setString(1, username);
+        ResultSet rs = statement.executeQuery();
+        while(rs.next()){
+            user.setId(rs.getLong("id"));
+            user.setUsername(rs.getString("username"));
+            user.setPassword(rs.getString("password"));
+            user.setRights(rs.getLong("rights"));
+        }
+        rs.close();
+        statement.close();
+        return user;
+    }
 }

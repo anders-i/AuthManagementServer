@@ -18,55 +18,57 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import io.swagger.model.Token;
+import io.swagger.model.User;
 import javax.validation.constraints.*;
 
 /**
- * LoginRequest
+ * UserRequest
  */
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2019-05-10T17:25:08.962Z")
-public class LoginRequest   {
-  @JsonProperty("username")
-  private String username = null;
+public class UserRequest   {
+  @JsonProperty("user")
+  private User user = null;
 
-  @JsonProperty("password")
-  private String password = null;
+  @JsonProperty("token")
+  private Token token = null;
 
-  public LoginRequest username(String username) {
-    this.username = username;
+  public UserRequest user(User user) {
+    this.user = user;
     return this;
   }
 
   /**
-   * The username the user uses to login
-   * @return username
+   * Get user
+   * @return user
    **/
-  @JsonProperty("username")
-  @ApiModelProperty(value = "The username the user uses to login")
-  public String getUsername() {
-    return username;
+  @JsonProperty("user")
+  @ApiModelProperty(value = "")
+  public User getUser() {
+    return user;
   }
 
-  public void setUsername(String username) {
-    this.username = username;
+  public void setUser(User user) {
+    this.user = user;
   }
 
-  public LoginRequest password(String password) {
-    this.password = password;
+  public UserRequest token(Token token) {
+    this.token = token;
     return this;
   }
 
   /**
-   * The password the user uses to login
-   * @return password
+   * Get token
+   * @return token
    **/
-  @JsonProperty("password")
-  @ApiModelProperty(value = "The password the user uses to login")
-  public String getPassword() {
-    return password;
+  @JsonProperty("token")
+  @ApiModelProperty(value = "")
+  public Token getToken() {
+    return token;
   }
 
-  public void setPassword(String password) {
-    this.password = password;
+  public void setToken(Token token) {
+    this.token = token;
   }
 
 
@@ -78,24 +80,24 @@ public class LoginRequest   {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    LoginRequest loginRequest = (LoginRequest) o;
-    return Objects.equals(this.username, loginRequest.username) &&
-        Objects.equals(this.password, loginRequest.password);
+    UserRequest userRequest = (UserRequest) o;
+    return Objects.equals(this.user, userRequest.user) &&
+        Objects.equals(this.token, userRequest.token);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(username, password);
+    return Objects.hash(user, token);
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class LoginRequest {\n");
+    sb.append("class UserRequest {\n");
     
-    sb.append("    username: ").append(toIndentedString(username)).append("\n");
-    sb.append("    password: ").append(toIndentedString(password)).append("\n");
+    sb.append("    user: ").append(toIndentedString(user)).append("\n");
+    sb.append("    token: ").append(toIndentedString(token)).append("\n");
     sb.append("}");
     return sb.toString();
   }

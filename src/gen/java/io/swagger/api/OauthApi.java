@@ -10,6 +10,7 @@ import io.swagger.jaxrs.*;
 import io.swagger.model.AccessTokenCheckResponse;
 import io.swagger.model.LoginRequest;
 import io.swagger.model.Token;
+import io.swagger.model.UserRequest;
 
 import java.util.Map;
 import java.util.List;
@@ -31,7 +32,7 @@ import javax.validation.constraints.*;
 
 
 @io.swagger.annotations.Api(description = "the oauth API")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2019-04-15T09:56:43.257Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2019-05-10T17:25:08.962Z")
 public class OauthApi  {
    private final OauthApiService delegate;
 
@@ -76,9 +77,9 @@ public class OauthApi  {
     @Path("/requestAccessToken")
     @Consumes({ "application/json" })
     @Produces({ "application/json" })
-    @io.swagger.annotations.ApiOperation(value = "", notes = "To request an access token, the client obtains authorization from the resource owner.  The authorization is expressed in the form of an authorization grant, which the client uses to request the access token. See https://tools.ietf.org/html/rfc6749#section-4 for more detail. ", response = Token.class, tags={ "Delegation protocol", })
+    @io.swagger.annotations.ApiOperation(value = "", notes = "To request an access token, the client obtains authorization from the resource owner.  The authorization is expressed in the form of an authorization grant, which the client uses to request the access token. See https://tools.ietf.org/html/rfc6749#section-4 for more detail. ", response = UserRequest.class, tags={ "Delegation protocol", })
     @io.swagger.annotations.ApiResponses(value = { 
-        @io.swagger.annotations.ApiResponse(code = 200, message = "OK", response = Token.class),
+        @io.swagger.annotations.ApiResponse(code = 200, message = "OK", response = UserRequest.class),
         
         @io.swagger.annotations.ApiResponse(code = 400, message = "Bad Request", response = Void.class),
         

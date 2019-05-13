@@ -14,39 +14,16 @@
 package io.swagger.model;
 
 import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.model.User;
+import java.util.ArrayList;
+import java.util.List;
 import javax.validation.constraints.*;
 
 /**
- * AccessTokenCheckResponse
+ * UserArray
  */
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.JavaJerseyServerCodegen", date = "2019-05-10T17:25:08.962Z")
-public class AccessTokenCheckResponse   {
-  @JsonProperty("canAccess")
-  private Boolean canAccess = null;
-
-  public AccessTokenCheckResponse canAccess(Boolean canAccess) {
-    this.canAccess = canAccess;
-    return this;
-  }
-
-  /**
-   * Can the token provided access the desired function
-   * @return canAccess
-   **/
-  @JsonProperty("canAccess")
-  @ApiModelProperty(value = "Can the token provided access the desired function")
-  public Boolean isCanAccess() {
-    return canAccess;
-  }
-
-  public void setCanAccess(Boolean canAccess) {
-    this.canAccess = canAccess;
-  }
-
+public class UserArray extends ArrayList<User>  {
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -56,22 +33,20 @@ public class AccessTokenCheckResponse   {
     if (o == null || getClass() != o.getClass()) {
       return false;
     }
-    AccessTokenCheckResponse accessTokenCheckResponse = (AccessTokenCheckResponse) o;
-    return Objects.equals(this.canAccess, accessTokenCheckResponse.canAccess);
+    return true;
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(canAccess);
+    return Objects.hash(super.hashCode());
   }
 
 
   @Override
   public String toString() {
     StringBuilder sb = new StringBuilder();
-    sb.append("class AccessTokenCheckResponse {\n");
-    
-    sb.append("    canAccess: ").append(toIndentedString(canAccess)).append("\n");
+    sb.append("class UserArray {\n");
+    sb.append("    ").append(toIndentedString(super.toString())).append("\n");
     sb.append("}");
     return sb.toString();
   }

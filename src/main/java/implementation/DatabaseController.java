@@ -58,8 +58,8 @@ public class DatabaseController {
             ResultSet existingRS = existingToken.executeQuery();
             token = new Token();
             if (existingRS.next()) {
-                ZonedDateTime times = ZonedDateTime.parse(existingRS.getString("expires"));
-                if (times.isBefore(ZonedDateTime.now())) {
+                OffsetDateTime existingExpiresDate = OffsetDateTime.parse(existingRS.getString("expires"));
+                if (existingExpiresDate.isBefore(OffsetDateTime.now())) {
                     String testInsert = "DELETE FROM public.tokens WHERE token = ?;";
                     try (PreparedStatement deleteStatement = con.prepareStatement(testInsert)) {
                         deleteStatement.setString(1, existingRS.getString("token"));
@@ -74,9 +74,7 @@ public class DatabaseController {
             }
             RandomString session = new RandomString(200);
             token.setAccessToken(session.nextString());
-            LocalDate localDate = LocalDate.now().plusDays(1);
-            LocalTime localTime = LocalTime.now();
-            OffsetDateTime datetime = OffsetDateTime.of(LocalDateTime.of(localDate, localTime), ZoneOffset.UTC);
+            OffsetDateTime datetime = OffsetDateTime.now().plusDays(1);
             token.setExpires(datetime.toString());
             String insertTokenSQL = "INSERT INTO public.tokens (token, user_id, expires) VALUES (?, ?, ?);";
             try (PreparedStatement tokenStatement = con.prepareStatement(insertTokenSQL)) {
@@ -133,7 +131,6 @@ public class DatabaseController {
             }
         }
         throw new LoginException("Wrong username or password provided");
-
     }
 
     /**

@@ -29,7 +29,7 @@ public class DataSource {
         ds.setUsername("admin");
         ds.setPassword("1234");
         ds.setUrl("jdbc:postgresql://localhost:" + 25000 + "/postgres");
-
+        
         ds.setMaxWaitMillis(1000 * 60 * 10); //wait 60 seconds to get new connection
         ds.setMaxTotal(45);
         ds.setMaxIdle(45);

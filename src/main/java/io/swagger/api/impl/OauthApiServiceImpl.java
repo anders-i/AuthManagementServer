@@ -38,8 +38,8 @@ public class OauthApiServiceImpl extends OauthApiService {
             }
         } catch (SQLException ex) {
             Logger.getLogger(OauthApiServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            return Response.status(400).build();
         }
-        return Response.serverError().build();
     }
     @Override
     public Response requestAccessToken(LoginRequest body, SecurityContext securityContext) throws NotFoundException {
@@ -47,9 +47,10 @@ public class OauthApiServiceImpl extends OauthApiService {
             return Response.ok().entity(new OAuthServerImplementation().requestAccessToken(body, con)).build();
         } catch (SQLException ex) {
             Logger.getLogger(OauthApiServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            return Response.status(500).entity(ex.toString()).build();
         } catch (LoginException ex) {
-            Logger.getLogger(OauthApiServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(OauthApiServiceImpl.class.getName()).log(Level.INFO, null, ex);
+            return Response.status(400).entity(ex.toString()).build();
         }
-        return Response.serverError().build();
     }
 }

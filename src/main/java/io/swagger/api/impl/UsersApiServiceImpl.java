@@ -17,6 +17,8 @@ import io.swagger.api.NotFoundException;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 
@@ -34,6 +36,7 @@ public class UsersApiServiceImpl extends UsersApiService {
             new UsersServerImplementation().createUser(body.getUser() ,con);
             return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK, "magic!")).build();
         } catch (SQLException ex) {
+            Logger.getLogger(UsersApiServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             return Response.status(400).entity(ex.toString()).build();
         }
     }
@@ -45,6 +48,7 @@ public class UsersApiServiceImpl extends UsersApiService {
             new UsersServerImplementation().deleteUser(body.getUser(), con);
             return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK, "magic!")).build();
         } catch (SQLException ex) {
+            Logger.getLogger(UsersApiServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             return Response.status(400).entity(ex.toString()).build();
         }
     }
@@ -54,12 +58,9 @@ public class UsersApiServiceImpl extends UsersApiService {
         try (Connection con = DataSource.getInstance().getConnection()) {
             new DatabaseController().checkAccessToken(body.getToken(), con);
             new UsersServerImplementation().editUser(body.getUser() ,con);
-            System.out.println(body.getUser().getId() + " : ID HEEEEER");
-            System.out.println(body.getUser().getPassword() + " : PASSWORD HEEEEER");
-            System.out.println(body.getUser().getUsername() + " : USERNAME HEEEEER");
-            System.out.println(body.getUser().getRights() + " : RIGHTS HEEEEER");
             return Response.ok().entity(new ApiResponseMessage(ApiResponseMessage.OK, "magic!")).build();
         } catch (SQLException ex) {
+            Logger.getLogger(UsersApiServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             return Response.status(400).entity(ex.toString()).build();
         }
     }
@@ -71,6 +72,7 @@ public class UsersApiServiceImpl extends UsersApiService {
             UserArray response = new UsersServerImplementation().getAllUsers(con);
             return Response.ok().entity(response).build();
         } catch (SQLException ex) {
+            Logger.getLogger(UsersApiServiceImpl.class.getName()).log(Level.SEVERE, null, ex);
             return Response.status(400).entity(ex.toString()).build();
         }
     }
